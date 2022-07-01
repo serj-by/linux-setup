@@ -14,15 +14,11 @@ screensaver=['<Control><Alt>l', 'XF86ScreenSaver', '<Primary><Alt>Eject']
 
 [desktop/keybindings/wm]
 switch-windows=['<Alt>Tab', '<Super>Tab']
-toggle-maximized=['<Alt>F10', '<Super>Return', '<Alt>Return']
 
 [desktop/media-handling]
 autorun-x-content-ignore=@as []
 autorun-x-content-open-folder=@as []
 autorun-x-content-start-app=['x-content/unix-software']
-
-[desktop/screensaver]
-layout-group=0
 
 [desktop/sound]
 event-sounds=false
