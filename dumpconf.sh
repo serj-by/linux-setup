@@ -1,6 +1,25 @@
-#!/bin/bash
 conf_name="dconf-root-all.txt"
 dconf_path="/"
+
+errors_tpl="$(tput setaf 1)%txt%$(tput sgr0)"
+notice_tpl="$(tput setaf 9)%txt%$(tput sgr0)"
+info_tpl="$(tput setaf 7)%txt%$(tput sgr0)"
+
+curtpl="ctpl$info_tpl"
+
+print_txt_with_tpl () {
+echo $curtpl | sed "s/%txt%/$*/"
+}
+
+print_error () {
+  curtpl=$errors_tpl
+  print_txt_with_tpl $*
+}
+
+print_notice () {
+  curtpl=$notice_tpl
+  print_txt_with_tpl $*
+}
 
 conf_bak_name_tpl="dconf-root-all-%date%-%ver%.txt"
 bakconf_path="bakconfs"
@@ -9,24 +28,24 @@ CONST_MSG_bak_overlimit_error="Backup versions limit exceeds. Please cleanup $ba
 CONST_ERRCODE_bak_overlimit_error=1
 bakconf_path="$bakconf_path/"
 
-((bak_ver_limit+=1))
+bak_ver_limit=$(( $bak_ver_limit+1 ))
 mkdir -p $bakconf_path
 
 #formname output formed name based on passed file version
-function formname () {
+formname () {
 now=`date +%y%m%d`
 ver=$1
 
 #Zeropad config version if needed
-if [[ $ver -le 9 ]]
+if [ $ver -le 9 ]
 then
 ver="0"$ver;
-fi
+fi;
 
-echo $conf_bak_name_tpl | sed "s/%date%/$now/" | sed "s/%ver%/$ver/"
+echo $conf_bak_name_tpl | sed "s/%date%/$now/" | sed "s/%ver%/$ver/";
 }
 
-function baknamewithpath () {
+baknamewithpath () {
 echo "$bakconf_path$(formname $1)"
 }
 
@@ -39,7 +58,7 @@ if [ ! -f $bakname ]
 then
   break;
 else
-  echo "Backup $bakname already exists. Skipping..."
+  echo "Backup $bakname already exists. Skipping this name..."
   lastbackup=$bakname
   echo "Setting $bakname as last backup"
 fi
@@ -48,7 +67,7 @@ done
 
 if [ $cnt -ge $bak_ver_limit ]
 then
-  echo $CONST_MSG_bak_overlimit_error;
+  print_error $CONST_MSG_bak_overlimit_error;
   exit $CONST_ERRCODE_bak_overlimit_error;
 fi
 

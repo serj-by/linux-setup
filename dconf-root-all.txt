@@ -7,7 +7,7 @@ favorite-apps-list=['location:/usr/share/applications/firefox.desktop\n', 'locat
 
 [com/linuxmint/updates]
 install-last-run=1656661778
-refresh-last-run=1656829255
+refresh-last-run=1656836461
 show-welcome-page=false
 window-height=570
 window-pane-position=280
@@ -69,7 +69,7 @@ motion-threshold=1
 touchpad-enabled=true
 
 [org/cinnamon/settings-daemon/peripherals/touchscreen]
-orientation-lock=false
+orientation-lock=true
 
 [org/gnome/baobab/ui]
 window-size=(960, 600)
@@ -146,6 +146,10 @@ ignore-ca-cert=false
 ignore-phase2-ca-cert=false
 
 [org/gnome/nm-applet/eap/3e950344-7dd5-4b9f-ad38-0bdb52668e86]
+ignore-ca-cert=false
+ignore-phase2-ca-cert=false
+
+[org/gnome/nm-applet/eap/f4a92561-30f2-4164-9440-8df3b5f5ea9f]
 ignore-ca-cert=false
 ignore-phase2-ca-cert=false
 
