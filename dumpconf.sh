@@ -31,15 +31,17 @@ echo "$bakconf_path$(formname $1)"
 }
 
 cnt=1
+lastbackup=""
 while [ $cnt -lt $bak_ver_limit ]
 do
 bakname=$(baknamewithpath $cnt)
 if [ ! -f $bakname ]
 then
-  echo "FOUNDFREE:" $bakname;
   break;
 else
   echo "Backup $bakname already exists. Skipping..."
+  lastbackup=$bakname
+  echo "Setting $bakname as last backup"
 fi
 ((cnt+=1))
 done
@@ -56,3 +58,6 @@ echo -n "Backing up old $conf_name to $bakname... "
 mv $conf_name $bakname && echo "Done!"
 echo -n "Dumping dconf$doconf_path to $conf_name..."
 dconf dump $dconf_path > $conf_name && echo "Done!"
+
+echo "Comparing current config $conf_name with last backup $lastbackup..."
+diff $conf_name $lastbackup && echo "$(tput setaf 2)No differences found$(tput sgr0)"
