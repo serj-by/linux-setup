@@ -10,6 +10,7 @@ CONST_ERRCODE_bak_overlimit_error=1
 bakconf_path="$bakconf_path/"
 
 ((bak_ver_limit+=1))
+mkdir -p $bakconf_path
 
 #formname output formed name based on passed file version
 function formname () {
