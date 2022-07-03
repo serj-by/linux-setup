@@ -1,5 +1,17 @@
+###############BASIC CONFIG###################
+
 conf_name="dconf-root-all.txt"
-dconf_path="/"
+dconf_tree="/"
+
+conf_bak_name_tpl="dconf-root-all-%date%-%ver%.txt"
+bakconf_path="bakconfs"
+bak_ver_limit=15
+CONST_MSG_bak_overlimit_error="Backup versions limit exceeds. Please cleanup $bakconf_path directory. Aborting."
+CONST_ERRCODE_bak_overlimit_error=1
+bakconf_path="$bakconf_path/"
+
+###############/ BASIC CONFIG################
+
 
 errors_tpl="$(tput setaf 1)%txt%$(tput sgr0)"
 notice_tpl="$(tput setaf 9)%txt%$(tput sgr0)"
@@ -21,12 +33,11 @@ print_notice () {
   print_txt_with_tpl $*
 }
 
-conf_bak_name_tpl="dconf-root-all-%date%-%ver%.txt"
-bakconf_path="bakconfs"
-bak_ver_limit=10
-CONST_MSG_bak_overlimit_error="Backup versions limit exceeds. Please cleanup $bakconf_path directory. Aborting."
-CONST_ERRCODE_bak_overlimit_error=1
-bakconf_path="$bakconf_path/"
+print_info () {
+  curtpl=$info_tpl
+  print_txt_with_tpl $*
+}
+
 
 bak_ver_limit=$(( $bak_ver_limit+1 ))
 mkdir -p $bakconf_path
@@ -62,7 +73,7 @@ else
   lastbackup=$bakname
   echo "Setting $bakname as last backup"
 fi
-((cnt+=1))
+cnt=$(( $cnt+1 ))
 done
 
 if [ $cnt -ge $bak_ver_limit ]
