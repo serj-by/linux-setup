@@ -1,21 +1,57 @@
-dconf_set_name="cin-all-dconf.txt"
-orig_name="oldconfs/cin-all-dconf-bak-`date +%y%m%d`"
-file_name="$orig_name-01"
+#!/bin/bash
+conf_name="dconf-root-all.txt"
+dconf_path="/"
+
+conf_bak_name_tpl="dconf-root-all-%date%-%ver%.txt"
+bakconf_path="bakconfs"
+bak_ver_limit=10
+CONST_MSG_bak_overlimit_error="Backup versions limit exceeds. Please cleanup $bakconf_path directory. Aborting."
+CONST_ERRCODE_bak_overlimit_error=1
+bakconf_path="$bakconf_path/"
+
+((bak_ver_limit+=1))
+
+#formname output formed name based on passed file version
+function formname () {
+now=`date +%y%m%d`
+ver=$1
+
+#Zeropad config version if needed
+if [[ $ver -le 9 ]]
+then
+ver="0"$ver;
+fi
+
+echo $conf_bak_name_tpl | sed "s/%date%/$now/" | sed "s/%ver%/$ver/"
+}
+
+function baknamewithpath () {
+echo "$bakconf_path$(formname $1)"
+}
+
 cnt=1
-while [ -f "$file_name.txt" ]
+while [ $cnt -lt $bak_ver_limit ]
 do
-  cnt=$((cnt+1))
-  if [[ $cnt -lt 10 ]]
-  then
-    file_name="$orig_name-0$cnt"
-  else
-    file_name="$orig_name-$cnt"
-  fi
+bakname=$(baknamewithpath $cnt)
+if [ ! -f $bakname ]
+then
+  echo "FOUNDFREE:" $bakname;
+  break;
+else
+  echo "Backup $bakname already exists. Skipping..."
+fi
+((cnt+=1))
 done
-file_name="$file_name.txt"
-echo "Writing backup to $file_name"
-mv cin-all-dconf.txt $file_name
-echo "Dumping settings..."
-dconf dump /org/cinnamon/ > $dconf_set_name
-echo "Diff with previous:"
-diff $file_name $dconf_set_name && echo "No differrence with latest backup"
+
+if [ $cnt -ge $bak_ver_limit ]
+then
+  echo $CONST_MSG_bak_overlimit_error;
+  exit $CONST_ERRCODE_bak_overlimit_error;
+fi
+
+echo "$bakname seems like free name for backup. Processing..."
+
+echo -n "Backing up old $conf_name to $bakname... "
+mv $conf_name $bakname && echo "Done!"
+echo -n "Dumping dconf$doconf_path to $conf_name..."
+dconf dump $dconf_path > $conf_name && echo "Done!"

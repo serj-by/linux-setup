@@ -17,10 +17,10 @@ else
     echo "Skipping kernel update..."
 fi
 
-read -p "Restore all Cinnamon settings (y/n)?" q;
+read -p "Restore all DConf settings (y/n)?" q;
 if [[ $q =~ ^[Yy]$ ]]; then
     echo "Cinnamon setting restoring...";
-    sudo dconf load /org/cinnamon/ < cin-all-dconf.txt && echo "Done. Press Ctrl+Alt+Esc to restart Cinnamon";
+    sudo dconf load /org/cinnamon/ < root-all-dconf.txt && echo "Done. Press Ctrl+Alt+Esc to restart Cinnamon";
 else
     echo "Skipping Cinnamon settings restore...";
 fi
